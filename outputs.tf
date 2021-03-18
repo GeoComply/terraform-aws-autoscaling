@@ -1,6 +1,6 @@
 locals {
-  this_launch_configuration_id   = var.launch_configuration == "" && var.create_lc ? concat(aws_launch_configuration.this.*.id, [""])[0] : var.launch_configuration
-  this_launch_configuration_name = var.launch_configuration == "" && var.create_lc ? concat(aws_launch_configuration.this.*.name, [""])[0] : ""
+  this_launch_configuration_id   = var.launch_configuration == "" && var.create_lc ? concat(aws_launch_template.this.*.id, [""])[0] : var.launch_configuration
+  this_launch_configuration_name = var.launch_configuration == "" && var.create_lc ? concat(aws_launch_template.this.*.name, [""])[0] : ""
 
   this_autoscaling_group_id                        = concat(aws_autoscaling_group.this.*.id, aws_autoscaling_group.this_with_initial_lifecycle_hook.*.id, [""])[0]
   this_autoscaling_group_name                      = concat(aws_autoscaling_group.this.*.name, aws_autoscaling_group.this_with_initial_lifecycle_hook.*.name, [""])[0]

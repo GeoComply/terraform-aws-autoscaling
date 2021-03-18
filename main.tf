@@ -1,7 +1,7 @@
 #######################
 # Launch configuration
 #######################
-resource "aws_launch_configuration" "this" {
+resource "aws_launch_template" "this" {
   count = var.create_lc ? 1 : 0
 
   name_prefix                 = "${coalesce(var.lc_name, var.name)}-"
@@ -71,7 +71,7 @@ resource "aws_autoscaling_group" "this" {
       ],
     ),
   )}-"
-  launch_configuration = var.create_lc ? element(concat(aws_launch_configuration.this.*.name, [""]), 0) : var.launch_configuration
+  launch_configuration = var.create_lc ? element(concat(aws_launch_template.this.*.name, [""]), 0) : var.launch_configuration
   vpc_zone_identifier  = var.vpc_zone_identifier
   max_size             = var.max_size
   min_size             = var.min_size
@@ -125,7 +125,7 @@ resource "aws_autoscaling_group" "this_with_initial_lifecycle_hook" {
       ],
     ),
   )}-"
-  launch_configuration = var.create_lc ? element(aws_launch_configuration.this.*.name, 0) : var.launch_configuration
+  launch_configuration = var.create_lc ? element(aws_launch_template.this.*.name, 0) : var.launch_configuration
   vpc_zone_identifier  = var.vpc_zone_identifier
   max_size             = var.max_size
   min_size             = var.min_size
@@ -181,6 +181,6 @@ resource "random_pet" "asg_name" {
 
   keepers = {
     # Generate a new pet name each time we switch launch configuration
-    lc_name = var.create_lc ? element(concat(aws_launch_configuration.this.*.name, [""]), 0) : var.launch_configuration
+    lc_name = var.create_lc ? element(concat(aws_launch_template.this.*.name, [""]), 0) : var.launch_configuration
   }
 }
